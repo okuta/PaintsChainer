@@ -26,13 +26,21 @@ class ImageAndRefDataset(chainer.dataset.DatasetMixin):
     def get_name(self, i):
         return self._paths[i]
 
-    def get_example(self, i, minimize=False, blur=0, s_size=128):
+    def get_example(self, i, minimize=False, blur=0, s_size=128, padding=False):
         path1 = os.path.join(self._root1, self._paths[i])
         #image1 = ImageDataset._read_image_as_array(path1, self._dtype)
 
         image1 = cv2.imread(path1, cv2.IMREAD_GRAYSCALE)
         print("load:" + path1, os.path.isfile(path1), image1 is None)
         image1 = np.asarray(image1, self._dtype)
+        if padding and image1.shape[0] != image1.shape[1]:
+            p = image1.shape[0] - image1.shape[1]
+            if p < 0:
+                p = -p
+                pad = [(p // 2, p - p // 2), (0, 0)]
+            else:
+                pad = [(0, 0), (p // 2, p - p // 2)]
+            image1 = np.pad(image1, pad, 'constant', constant_values=0)
 
         _image1 = image1.copy()
         if minimize:

@@ -117,7 +117,7 @@ class Painter:
 
         dataset = ImageAndRefDataset(
             [id_str + ".png"], self.root + "line/", self.root + "ref/")
-        line, line2 = dataset.get_example(0, minimize=True)
+        line, line2 = dataset.get_example(0, minimize=True, padding=True)
         # 1st fixed to 128*128
         x = np.zeros((1, 4, line.shape[1], line.shape[2]), dtype='f')
         input_bat = np.zeros((1, 4, line2.shape[1], line2.shape[2]), dtype='f')
